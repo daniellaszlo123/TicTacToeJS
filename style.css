@@ -1,0 +1,17 @@
+*{
+    box-sizing: border-box;
+}
+
+#container{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    padding: 5px;
+    width: 200px;
+}
+
+.mezo{
+    border: 1px solid black;
+    width: 100%;
+    height: 50px;
+    text-align: center;
+}
