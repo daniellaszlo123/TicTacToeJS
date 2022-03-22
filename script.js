@@ -8,8 +8,21 @@ window.addEventListener("load", init);
         return document.querySelectorAll(elem);
     }
 }
+/*változók*/{
+    var kiJon=0;
+    var felulet=["-", "-", "-", 
+                "-", "-", "-", 
+                "-", "-", "-"];
+}
+function valtozokNullazasa() {
+    felulet=["-", "-", "-", 
+         "-", "-", "-", 
+         "-", "-", "-"];
+    kiJon=0;
+}
 
 function init() {
+    valtozokNullazasa();
     megjelenit();
     ID("clear").addEventListener("click", init);
     mezoEvent();
@@ -31,30 +44,73 @@ function megjelenit() {
     ID("container").innerHTML=txt;   
 }
 
-var kiJon=0;
-var felulet=["-", "-", "-", "-", "-", "-", "-", "-", "-"];
+function kiLep(jel, lepes, index) {
+    ID(index).innerHTML=`<p>${jel}</p>`;
+        ID(index).removeEventListener("click", xVagyO);
+        felulet[index]=`${jel}`;
+        kiJon+=lepes;
+}
+
 function xVagyO(){
     index=event.target.id;
     if (kiJon<1) {
-        ID(index).innerHTML="<p>X</p>";
-        ID(index).removeEventListener("click", xVagyO);
-        felulet[index]="X";
-        kiJon++;
-        //console.log(kiJon);
-        console.log(felulet);
+        kiLep("X", 1, index);
     } else {
-        ID(index).innerHTML="<p>O</p>";
-        ID(index).removeEventListener("click", xVagyO);
-        felulet[index]="O";
-        kiJon--;
-        //console.log(kiJon);
-        console.log(felulet);
+        kiLep("O", -1, index);
     }
+    /*JÓ esetek kigyüjtése*/{
+        var feluletHossz=felulet.length;
+        var oszlop1=kigyujto(0, feluletHossz, 3, felulet);
+        var oszlop2=kigyujto(1, feluletHossz, 3, felulet);
+        var oszlop3=kigyujto(2, feluletHossz, 3, felulet);
+        var sor1="";
+        var sor2="";
+        var sor3="";
+        for (let i = 0; i < felulet.length; i++) {
+            if (i<=2) {
+                sor1+=felulet[i];
+            }else if (i<=5) {
+                sor2+=felulet[i];
+            }else if (i<=8) {
+                sor3+=felulet[i];
+            }
+        }
+        var atlo1=kigyujto(0, feluletHossz, 4, felulet);
+        var atlo2=kigyujto(2, feluletHossz-1, 2, felulet);
+    }
+    /*ellenorzes*/{
+        ellenorzes(oszlop1);
+        ellenorzes(oszlop2);
+        ellenorzes(oszlop3);
+        ellenorzes(atlo1);
+        ellenorzes(atlo2);
+        ellenorzes(sor1);
+        ellenorzes(sor2);
+        ellenorzes(sor3);
+    }
+}
 
-    if (felulet[0]===felulet[1]===felulet[2] || felulet[3]===felulet[4]===felulet[5] || 
-        felulet[6]===felulet[7]===felulet[8] || felulet[0]===felulet[4]===felulet[6] ||
-        felulet[1]===felulet[5]===felulet[7] || felulet[2]===felulet[6]===felulet[8] ||
-        felulet[0]===felulet[5]===felulet[8] || felulet[3]===felulet[5]===felulet[6]) {
-        console.log("nyertél");
+function kigyujto(mettol, meddig, lepesszam, felulet) {
+    var kigyujtott="";
+    for (let i = mettol; i < meddig; i+=lepesszam) {
+        kigyujtott+=felulet[i];
     }
+    return kigyujtott;
+}
+
+function ellenorzes(kigyujtott) {
+    if (kigyujtott=="XXX" || kigyujtott=="OOO") {
+        if (kigyujtott=="XXX") {
+            gyozKiir("X");
+        } else {
+            gyozKiir("O");
+        }
+    }
+}
+
+function gyozKiir(jel) {
+    alert(`Nyert az '${jel}' játékos!`);
+            for (let index = 0; index < 9; index++) {
+                ID(index).removeEventListener("click", xVagyO);
+            }
 }
